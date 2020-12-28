@@ -12,7 +12,7 @@ RUN apt install -y mysql-server
 RUN apt install -y software-properties-common
 RUN add-apt-repository -y ppa:ondrej/php
 RUN apt-get update
-RUN apt-get install -y php5.6 php5.6-mbstring php5.6-mcrypt php5.6-mysql php5.6-xml php5.6-curl
+RUN apt-get install -y php7.0 libapache2-mod-php7.0 php7.0-cli php7.0-common php7.0-mbstring php7.0-gd php7.0-intl php7.0-xml php7.0-mysql php7.0-mcrypt php7.0-zip
 
 RUN apt-get install -y wget unzip
 RUN cd /var/www/html/

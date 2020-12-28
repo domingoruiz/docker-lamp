@@ -1,5 +1,5 @@
 # LAMP Server on Docker
-Servidor LAMP en Docker basado en Ubuntu 20.04 LTS con PHP 5.6, Mysql, Apache2 y Phpmyadmin.
+Servidor LAMP en Docker basado en Ubuntu 20.04 LTS con PHP 7.0, Mysql, Apache2 y Phpmyadmin.
 
 ## Uso de este container
 Para usar este container tienes que seguir los siguientes pasos:
