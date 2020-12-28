@@ -13,7 +13,7 @@ or
 wget https://github.com/domingoruiz/docker-lamp/archive/PHP7.0.zip
 unzip PHP7.0.zip
 cd PHP7.0/
-docker image build -t docker-lamp-php5.6 .
+docker image build -t docker-lamp-php7.0 .
 ```
 
 For PHP5.6 also you can do it in one of the following two ways:
