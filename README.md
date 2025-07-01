@@ -1,48 +1,87 @@
-# LAMP Server on Docker
-LAMP server mounted on Ubuntu 20.04 in a Docker container. There are two versions of this container. One with PHP5.6 and one with PHP7.0. This includes PHP, Mysql, Apache2 and Phpmyadmin. This container is very useful as a base for other containers.
 
-## Implementation of this container
-To do this you must download the image on your local computer. You can do this in two ways
+# docker-lamp
 
-For PHP7.0 you can do it in one of the following two ways:
+Proyecto Docker LAMP que incluye:
+
+- PHP 8.4 con Apache y extensiones comunes (pdo, mysqli, zip, gd, xml, mbstring)
+- MySQL 8
+- phpMyAdmin
+- SSH habilitado (usuario root / sin contraseña)
+- SSL con certificado autofirmado (HTTPS)
+- Composer instalado
+- Carpeta `html` externa para desarrollo web
+
+---
+
+## Autor
+
+**Domingo Ruiz Arroyo**  
+Correo: ordenadordomi@gmail.com  
+GitHub: [https://github.com/domingoruiz/docker-lamp](https://github.com/domingoruiz/docker-lamp)
+
+---
+
+## Contenido
+
+Este proyecto contiene:
+
+- `Dockerfile`: imagen PHP 8.4 con Apache, SSH, Composer y módulos PHP típicos  
+- `docker-compose.yml`: orquestación de servicios (web, MySQL, phpMyAdmin)  
+- Configuración SSL con certificado autofirmado  
+- Carpeta `html/` externa para servir contenido web  
+- Configuración Apache SSL en `apache/default-ssl.conf`  
+
+---
+
+## Requisitos
+
+- Docker y Docker Compose instalados
+- OpenSSL (para generar certificados)  
+
+---
+
+## Uso
+
+1. Clona el repositorio:
+
 ```bash
-docker pull ghcr.io/domingoruiz/docker-lamp:php7.0
-```
-or
-```bash
-wget https://github.com/domingoruiz/docker-lamp/archive/PHP7.0.zip
-unzip PHP7.0.zip
-cd PHP7.0/
-docker image build -t docker-lamp-php7.0 .
+git clone https://github.com/domingoruiz/docker-lamp.git
+cd docker-lamp
 ```
 
-For PHP5.6 also you can do it in one of the following two ways:
+2. Genera el certificado SSL autofirmado (si no existe):
+
 ```bash
-docker pull ghcr.io/domingoruiz/docker-lamp:php5.6
-```
-or
-```bash
-wget https://github.com/domingoruiz/docker-lamp/archive/PHP5.6.zip
-unzip PHP5.6.zip
-cd PHP5.6/
-docker image build -t docker-lamp-php5.6 .
+mkdir -p ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout ssl/server.key -out ssl/server.crt \
+  -subj "/C=ES/ST=Málaga/L=ESP/O=Dev/CN=localhost"
 ```
 
-Once the image is downloaded we must start the container
+3. Levanta los contenedores:
+
 ```bash
-docker container run -it -p 80:80 docker-lamp-php7.0
-```
-or
-```bash
-docker container run -it -p 80:80 docker-lamp-php5.6
+docker-compose up -d --build
 ```
 
-Once started we will access inside the container to create the mysql user and load the application files
-```bash
-docker container exec CONTAINER_ID /bin/bash
-```
+---
 
-Finally, we will turn off the container and create our own image with our program already loaded.
-```bash
-docker commit CONTAINER_ID IMAGE_NAME
-```
+## Accesos
+
+| Servicio     | Dirección                             |
+|--------------|-------------------------------------|
+| Web HTTP     | http://localhost                    |
+| Web HTTPS    | https://localhost (certificado autofirmado) |
+| phpMyAdmin   | http://localhost:8080               |
+| SSH          | ssh root@localhost -p 2222 (clave: root) |
+| MySQL        | localhost:3306 (user/pass: user)   |
+
+---
+
+## Notas
+
+- El contenedor web expone puertos 80, 443 (SSL) y 2222 (SSH).  
+- El volumen `html` permite editar el contenido fuera del contenedor.  
+- Se usa `platform: linux/arm64` en Docker Compose para compatibilidad con Mac ARM.  
+- Apache y SSH se inician automáticamente en el contenedor web.  
+- Composer está instalado y listo para usar dentro del contenedor.

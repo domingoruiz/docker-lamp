@@ -1,0 +1,49 @@
+# Proyecto docker-lamp
+# Autor: Domingo Ruiz Arroyo <ordenadordomi@gmail.com>
+# GitHub: https://github.com/domingoruiz/docker-lamp
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2222:22"
+    volumes:
+      - ./html:/var/www/html:z
+      - ./ssl:/etc/apache2/ssl
+      - ./apache/default-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
+    depends_on:
+      - db
+    tty: true
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    platform: linux/amd64
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:
